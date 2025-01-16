@@ -26,6 +26,8 @@ pnpm install
 ### Development
 
 Copy `.env.example` to `.env` and provide a `DATABASE_URL` with your connection string.
+Example local connection
+`postgresql://postgres:postgres@localhost:5432/<databasename>`
 
 Run an initial database migration:
 
