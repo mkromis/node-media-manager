@@ -1,0 +1,9 @@
+node_modules
+
+/build
+.env
+.react-router/
+
+/cypress/screenshots
+/cypress/videos
+/postgres-data

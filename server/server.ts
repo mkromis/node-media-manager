@@ -1,15 +1,42 @@
+import prom from "@isaacs/express-prometheus-middleware";
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
+import sourceMapSupport from "source-map-support";
 
 // Short-circuit the type-checking of the built output.
-const BUILD_PATH = "./index.js";
+const BUILD_PATH = "./build/server/index.js";
+// const VERSION_PATH = "./build/version.txt";
+
 const DEVELOPMENT = process.env.NODE_ENV === "development";
 const PORT = Number.parseInt(process.env.PORT || "3000");
 
+sourceMapSupport.install();
+
 const app = express();
 
+// Metrics monitor, moved here due to double instance creation
+// during dev mode run.
+const metricsPort = process.env.METRICS_PORT || 3010;
+
+export const metricsApp = express();
+console.log("✅ Main app started");
+metricsApp.listen(metricsPort, () => {
+  console.log(`✅ Metrics ready: http://localhost:${metricsPort}/metrics`);
+});
+
+// Metrics app
+app.use(
+  prom({
+    metricsPath: "/metrics",
+    collectDefaultMetrics: true,
+    metricsApp,
+  }),
+);
+
 app.use(compression());
+
+// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
 
 if (DEVELOPMENT) {
@@ -17,7 +44,7 @@ if (DEVELOPMENT) {
   const viteDevServer = await import("vite").then((vite) =>
     vite.createServer({
       server: { middlewareMode: true },
-    })
+    }),
   );
   app.use(viteDevServer.middlewares);
   app.use(async (req, res, next) => {
@@ -35,7 +62,7 @@ if (DEVELOPMENT) {
   console.log("Starting production server");
   app.use(
     "/assets",
-    express.static("build/client/assets", { immutable: true, maxAge: "1y" })
+    express.static("build/client/assets", { immutable: true, maxAge: "1y" }),
   );
   app.use(express.static("build/client", { maxAge: "1h" }));
   app.use(await import(BUILD_PATH).then((mod) => mod.app));
@@ -44,5 +71,5 @@ if (DEVELOPMENT) {
 app.use(morgan("tiny"));
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`✅ loader ready: http://localhost:${PORT}`);
 });

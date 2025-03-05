@@ -1,12 +1,14 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.vite.json" }
+    { "path": "./tsconfig.server.json" },
+    { "path": "./tsconfig.client.json" }
   ],
   "compilerOptions": {
+    "allowJs": true,
     "checkJs": true,
-    "verbatimModuleSyntax": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true
