@@ -3,9 +3,10 @@ import { fileURLToPath } from "node:url";
 
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
 import * as tsParser from "@typescript-eslint/parser";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import cypress from "eslint-plugin-cypress";
 import _import from "eslint-plugin-import";
 import jest from "eslint-plugin-jest";
@@ -26,37 +27,39 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
+  recommendedConfig: eslint.configs.recommended,
+  allConfig: eslint.configs.all,
 });
 
-export default [
-  js.configs.recommended,
+export default tseslint.config(
+  eslint.configs.recommended,
+  eslint.configs.all,
+  tseslint.configs.recommended,
+  tseslint.configs.strict,
+  tseslint.configs.stylistic,
   {
     files: ["**/*.{js,jsx}"],
     ignores: ["build/**/*", ".react-router/**/*"],
   },
-    {
-        files: ["**/*.{ts,tsx}"],
-        ignores: ["build/", ".react-router/**/*"],
-        languageOptions: {
-            globals: {
-                ...globals.browser,
-                ...globals.commonjs,
-            },
-            
-            ecmaVersion: "latest",
-            sourceType: "module",
-            
-            parserOptions: {
-              ecmaFeatures: {
-                    jsx: true,
-                },
-            },
+  {
+    files: ["**/*.{ts,tsx}"],
+    ignores: ["build/", ".react-router/**/*"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.commonjs,
+      },
+
+      ecmaVersion: "latest",
+      sourceType: "module",
+
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
         },
+      },
     },
-    //js.configs.recommended,
-    //js.configs.all,
+  },
 
   ...fixupConfigRules(
     compat.extends(
@@ -109,13 +112,7 @@ export default [
     },
   },
   ...fixupConfigRules(
-    compat.extends(
-      "plugin:@typescript-eslint/recommended",
-      "plugin:@typescript-eslint/stylistic",
-      "plugin:import/recommended",
-      "plugin:import/typescript",
-      "prettier",
-    ),
+    compat.extends("plugin:import/typescript", "prettier"),
   ).map((config) => ({
     ...config,
     files: ["**/*.{ts,tsx}"],
@@ -126,7 +123,6 @@ export default [
     ignores: ["build/**/*", ".react-router/**/*"],
 
     plugins: {
-      "@typescript-eslint": fixupPluginRules(typescriptEslint),
       import: fixupPluginRules(_import),
     },
 
@@ -136,16 +132,12 @@ export default [
 
     settings: {
       "import/internal-regex": "^~/",
-
-      "import/resolver": {
-        node: {
-          extensions: [".ts", ".tsx"],
-        },
-
-        typescript: {
+      "import-x/resolver-next": [
+        createTypeScriptImportResolver({
           alwaysTryTypes: true,
-        },
-      },
+          extensions: [".ts", ".tsx"],
+        }),
+      ],
     },
 
     rules: {
@@ -231,4 +223,4 @@ export default [
       },
     },
   },
-];
+);
