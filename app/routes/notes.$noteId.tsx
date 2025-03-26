@@ -2,9 +2,9 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import {
   Form,
   isRouteErrorResponse,
+  redirect,
   useLoaderData,
   useRouteError,
-  redirect
 } from "react-router";
 import invariant from "tiny-invariant";
 

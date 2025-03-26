@@ -4,7 +4,6 @@ import { useOptionalUser } from "../utils";
 
 import { Route } from "./+types/_index";
 
-
 export function meta({}: Route.MetaFunction) {
   return [{ title: "React Router Notes" }];
 }

@@ -4,7 +4,13 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
-import { Form, Link, useActionData, useSearchParams, redirect } from "react-router";
+import {
+  Form,
+  Link,
+  redirect,
+  useActionData,
+  useSearchParams,
+} from "react-router";
 
 import { createUser, getUserByEmail } from "../models/user.server";
 import { createUserSession, getUserId } from "../session.server";
