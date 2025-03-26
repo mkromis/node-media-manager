@@ -1,14 +1,15 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import * as path from "node:path";
 
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
+
+import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
-import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
-import * as tsParser from "@typescript-eslint/parser";
+
+import js from "@eslint/js";
+import tsParser from "@typescript-eslint/parser";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import cypress from "eslint-plugin-cypress";
-import _import from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import";
 import jest from "eslint-plugin-jest";
 import jestDom from "eslint-plugin-jest-dom";
 import jsxA11Y from "eslint-plugin-jsx-a11y";
@@ -16,6 +17,7 @@ import markdown from "eslint-plugin-markdown";
 import react from "eslint-plugin-react";
 import testingLibrary from "eslint-plugin-testing-library";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
 /**
  * This is intended to be a basic starting point for linting in the Blues Stack.
@@ -27,13 +29,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-  recommendedConfig: eslint.configs.recommended,
-  allConfig: eslint.configs.all,
+  recommendedConfig: js.configs.recommended,
+  allConfig: js.configs.all,
 });
 
 export default tseslint.config(
-  eslint.configs.recommended,
-  eslint.configs.all,
+  js.configs.recommended,
+  js.configs.all,
   tseslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
@@ -123,7 +125,7 @@ export default tseslint.config(
     ignores: ["build/**/*", ".react-router/**/*"],
 
     plugins: {
-      import: fixupPluginRules(_import),
+      import: fixupPluginRules(importPlugin),
     },
 
     languageOptions: {
