@@ -153,15 +153,12 @@ async function main(): Promise<void> {
   const FLY_TOML_PATH = path.join(rootDirectory, "fly.toml");
   const EXAMPLE_ENV_PATH = path.join(rootDirectory, ".env.example");
   const ENV_PATH = path.join(rootDirectory, ".env");
-  const DOCKERFILE_PATH = path.join(
+  const DOCKERFILE_INIT_PATH = path.join(
     rootDirectory,
     "remix.init",
     "Dockerfile." + pm.name,
   );
-  const DOCKERFILE_INIT_PATH = path.join(
-    rootDirectory,
-    "Dockerfile." + pm.name,
-  );
+  const DOCKERFILE_PATH = path.join(rootDirectory, "Dockerfile");
   const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support");
   const CYPRESS_COMMANDS_PATH = path.join(CYPRESS_SUPPORT_PATH, "commands.ts");
   const CREATE_USER_COMMAND_PATH = path.join(
