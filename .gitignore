@@ -1,8 +1,9 @@
-.DS_Store
-.env
-/node_modules/
-*.tsbuildinfo
+node_modules
 
-# React Router
-/.react-router/
-/build/
+/build
+.env
+.react-router/
+
+/cypress/screenshots
+/cypress/videos
+/postgres-data
