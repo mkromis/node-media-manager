@@ -1,5 +1,5 @@
 {
-  "name": "node-media-manager",
+  "name": "node-media-manager-7e23",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -55,8 +55,6 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.23.0",
     "@faker-js/faker": "^9.6.0",
-    "@iarna/toml": "^2.2.5",
-    "@npmcli/package-json": "^6.1.1",
     "@react-router/dev": "^7.4.1",
     "@tailwindcss/vite": "^4.0.17",
     "@testing-library/cypress": "^10.0.3",
