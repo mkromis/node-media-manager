@@ -230,57 +230,57 @@ async function main(): Promise<void> {
 
   updatePackageJson(APP_NAME, packageJson, pm);
 
-  //   await Promise.all([
-  //     fs.writeFile(FLY_TOML_PATH, toml.stringify(prodToml)),
-  //     fs.writeFile(README_PATH, newReadme),
-  //     fs.writeFile(ENV_PATH, newEnv),
-  //     fs.writeFile(DOCKERFILE_PATH, newDockerfile),
-  //     ...cleanupCypressFiles({
-  //       fileEntries: [
-  //         [CYPRESS_COMMANDS_PATH, cypressCommands],
-  //         [CREATE_USER_COMMAND_PATH, createUserCommand],
-  //         [DELETE_USER_COMMAND_PATH, deleteUserCommand],
-  //       ],
-  //       packageManager: pm,
-  //     }),
-  //     packageJson.save(),
-  //     fs.copyFile(
-  //       path.join(rootDirectory, "remix.init", "gitignore"),
-  //       path.join(rootDirectory, ".gitignore"),
-  //     ),
-  //     fs.rm(path.join(rootDirectory, ".github", "ISSUE_TEMPLATE"), {
-  //       recursive: true,
-  //     }),
-  //     fs.rm(path.join(rootDirectory, ".github", "workflows", "format-repo.yml")),
-  //     fs.rm(path.join(rootDirectory, ".github", "workflows", "lint-repo.yml")),
-  //     fs.rm(path.join(rootDirectory, ".github", "workflows", "no-response.yml")),
-  //     fs.rm(path.join(rootDirectory, ".github", "dependabot.yml")),
-  //     fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
-  //     fs.rm(path.join(rootDirectory, "LICENSE.md")),
-  //   ]);
-  //
-  //   execSync(pm.run("format", "--log-level warn"), {
-  //     cwd: rootDirectory,
-  //     stdio: "inherit",
-  //   });
-  //
-  //   console.log(
-  //     `
-  // Setup is almost complete. Follow these steps to finish initialization:
-  //
-  // - Start the database:
-  //   ${pm.run("docker", "")}
-  //
-  // - Run setup (this updates the database):
-  //   ${pm.run("setup", "")}
-  //
-  // - Run the first build (this generates the server you will run):
-  //   ${pm.run("build", "")}
-  //
-  // - You're now ready to rock and roll 🤘
-  //   ${pm.run("dev", "")}
-  //     `.trim(),
-  //   );
+  await Promise.all([
+    fs.writeFile(FLY_TOML_PATH, toml.stringify(prodToml)),
+    fs.writeFile(README_PATH, newReadme),
+    fs.writeFile(ENV_PATH, newEnv),
+    fs.writeFile(DOCKERFILE_PATH, newDockerfile),
+    ...cleanupCypressFiles({
+      fileEntries: [
+        [CYPRESS_COMMANDS_PATH, cypressCommands],
+        [CREATE_USER_COMMAND_PATH, createUserCommand],
+        [DELETE_USER_COMMAND_PATH, deleteUserCommand],
+      ],
+      packageManager: pm,
+    }),
+    packageJson.save(),
+    fs.copyFile(
+      path.join(rootDirectory, "remix.init", "gitignore"),
+      path.join(rootDirectory, ".gitignore"),
+    ),
+    fs.rm(path.join(rootDirectory, ".github", "ISSUE_TEMPLATE"), {
+      recursive: true,
+    }),
+    fs.rm(path.join(rootDirectory, ".github", "workflows", "format-repo.yml")),
+    fs.rm(path.join(rootDirectory, ".github", "workflows", "lint-repo.yml")),
+    fs.rm(path.join(rootDirectory, ".github", "workflows", "no-response.yml")),
+    fs.rm(path.join(rootDirectory, ".github", "dependabot.yml")),
+    fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
+    fs.rm(path.join(rootDirectory, "LICENSE.md")),
+  ]);
+
+  execSync(pm.run("format", "--log-level warn"), {
+    cwd: rootDirectory,
+    stdio: "inherit",
+  });
+
+  console.log(
+    `
+  Setup is almost complete. Follow these steps to finish initialization:
+
+  - Start the database:
+    ${pm.run("docker", "")}
+
+  - Run setup (this updates the database):
+    ${pm.run("setup", "")}
+
+  - Run the first build (this generates the server you will run):
+    ${pm.run("build", "")}
+
+  - You're now ready to rock and roll 🤘
+    ${pm.run("dev", "")}
+      `.trim(),
+  );
 }
 
 // module.exports = main;
