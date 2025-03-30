@@ -36,6 +36,11 @@ Click this button to create a [Gitpod](https://gitpod.io) workspace with the pro
 
 - First run this stack's `remix.init` script and commit the changes it makes to your project.
 
+To run tsx for you package manager it may be one of the following 
+
+- `pnpm exec tsx...`
+- `npm exec tsx...`
+
   ```sh
   tsx remix.init/index.ts
   git init # if you haven't already

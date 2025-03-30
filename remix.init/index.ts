@@ -1,11 +1,11 @@
 import { execSync } from "node:child_process";
-import * as crypto from "node:crypto";
 import { existsSync } from "node:fs";
+import * as crypto from "node:crypto";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
 import * as toml from "@iarna/toml";
-import { PackageJson } from "@npmcli/package-json";
+import * as PackageJson from "@npmcli/package-json";
 import * as semver from "semver";
 
 export type PackageManager = "yarn" | "pnpm" | "npm";
@@ -23,7 +23,7 @@ const cleanupCypressFiles = ({
 }: {
   fileEntries: [string, string][];
   packageManager: PackageManagerCommands;
-}) => 
+}) =>
   fileEntries.flatMap(([filePath, content]) => {
     const newContent = content.replace(
       new RegExp("npx tsx", "g"),
@@ -96,24 +96,28 @@ const getPackageManagerVersion = (packageManager = detectPackageManager()) =>
 const getRandomString = (length: number) =>
   crypto.randomBytes(length).toString("hex");
 
-const removeUnusedDependencies = (dependencies, unusedDependencies) =>
+const removeUnusedDependencies = (
+  dependencies: Record<string, unknown> | ArrayLike<unknown>,
+  unusedDependencies: string | string[],
+) =>
   Object.fromEntries(
     Object.entries(dependencies).filter(
       ([key]) => !unusedDependencies.includes(key),
     ),
   );
 
-const updatePackageJson = ({
-  APP_NAME,
-  packageJson,
-  packageManager,
-}): void => {
+const updatePackageJson = (
+  APP_NAME: string,
+  packageJson: PackageJson,
+  packageManager: PackageManagerCommands,
+) => {
   const {
     devDependencies,
     prisma: { seed: prismaSeed, ...prisma },
-    scripts: { 
-      //"format:repo": _repoFormatScript, 
-      ...scripts },
+    scripts: {
+      //"format:repo": _repoFormatScript,
+      ...scripts
+    },
   } = packageJson.content;
 
   packageJson.update({
@@ -133,10 +137,17 @@ const updatePackageJson = ({
   });
 };
 
-const main = async () => {
-  const rootDirectory = ".";
+async function main(): Promise<void> {
+  // try to set
+  let rootDirectory = process.cwd();
+  if (path.dirname(rootDirectory) === "remix.init") {
+    rootDirectory = path.resolve(rootDirectory, "..");
+  }
+  console.log("The root folder is at", rootDirectory);
+
   const packageManager = detectPackageManager();
   const pm = getPackageManagerCommand(packageManager);
+  console.log("The package manager is", packageManager);
 
   const README_PATH = path.join(rootDirectory, "README.md");
   const FLY_TOML_PATH = path.join(rootDirectory, "fly.toml");
@@ -196,17 +207,17 @@ const main = async () => {
   prodToml.app = prodToml.app.toString().replace(REPLACER, APP_NAME);
 
   const initInstructions = `
-- First run this stack's \`remix.init\` script and commit the changes it makes to your project.
+  - First run this stack's \`remix.init\` script and commit the changes it makes to your project.
 
-  \`\`\`sh
-  npx remix init
-  git init # if you haven't already
-  git add .
-  git commit -m "Initialize project"
-  \`\`\`
-`;
+    \`\`\`sh
+    npx remix init
+    git init # if you haven't already
+    git add .
+    git commit -m "Initialize project"
+    \`\`\`
+  `;
 
-  const newReadme = readme
+  const newReadme: string = readme
     .replace(new RegExp(escapeRegExp(REPLACER), "g"), APP_NAME)
     .replace(initInstructions, "");
 
@@ -217,60 +228,60 @@ const main = async () => {
       )
     : dockerfile;
 
-  updatePackageJson({ APP_NAME, packageJson, packageManager: pm });
+  updatePackageJson(APP_NAME, packageJson, pm);
 
-  await Promise.all([
-    fs.writeFile(FLY_TOML_PATH, toml.stringify(prodToml)),
-    fs.writeFile(README_PATH, newReadme),
-    fs.writeFile(ENV_PATH, newEnv),
-    fs.writeFile(DOCKERFILE_PATH, newDockerfile),
-    ...cleanupCypressFiles({
-      fileEntries: [
-        [CYPRESS_COMMANDS_PATH, cypressCommands],
-        [CREATE_USER_COMMAND_PATH, createUserCommand],
-        [DELETE_USER_COMMAND_PATH, deleteUserCommand],
-      ],
-      packageManager: pm,
-    }),
-    packageJson.save(),
-    fs.copyFile(
-      path.join(rootDirectory, "remix.init", "gitignore"),
-      path.join(rootDirectory, ".gitignore"),
-    ),
-    fs.rm(path.join(rootDirectory, ".github", "ISSUE_TEMPLATE"), {
-      recursive: true,
-    }),
-    fs.rm(path.join(rootDirectory, ".github", "workflows", "format-repo.yml")),
-    fs.rm(path.join(rootDirectory, ".github", "workflows", "lint-repo.yml")),
-    fs.rm(path.join(rootDirectory, ".github", "workflows", "no-response.yml")),
-    fs.rm(path.join(rootDirectory, ".github", "dependabot.yml")),
-    fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
-    fs.rm(path.join(rootDirectory, "LICENSE.md")),
-  ]);
-
-  execSync(pm.run("format", "--log-level warn"), {
-    cwd: rootDirectory,
-    stdio: "inherit",
-  });
-
-  console.log(
-    `
-Setup is almost complete. Follow these steps to finish initialization:
-
-- Start the database:
-  ${pm.run("docker", "")}
-
-- Run setup (this updates the database):
-  ${pm.run("setup", "")}
-
-- Run the first build (this generates the server you will run):
-  ${pm.run("build", "")}
-
-- You're now ready to rock and roll 🤘
-  ${pm.run("dev", "")}
-    `.trim(),
-  );
-};
+  //   await Promise.all([
+  //     fs.writeFile(FLY_TOML_PATH, toml.stringify(prodToml)),
+  //     fs.writeFile(README_PATH, newReadme),
+  //     fs.writeFile(ENV_PATH, newEnv),
+  //     fs.writeFile(DOCKERFILE_PATH, newDockerfile),
+  //     ...cleanupCypressFiles({
+  //       fileEntries: [
+  //         [CYPRESS_COMMANDS_PATH, cypressCommands],
+  //         [CREATE_USER_COMMAND_PATH, createUserCommand],
+  //         [DELETE_USER_COMMAND_PATH, deleteUserCommand],
+  //       ],
+  //       packageManager: pm,
+  //     }),
+  //     packageJson.save(),
+  //     fs.copyFile(
+  //       path.join(rootDirectory, "remix.init", "gitignore"),
+  //       path.join(rootDirectory, ".gitignore"),
+  //     ),
+  //     fs.rm(path.join(rootDirectory, ".github", "ISSUE_TEMPLATE"), {
+  //       recursive: true,
+  //     }),
+  //     fs.rm(path.join(rootDirectory, ".github", "workflows", "format-repo.yml")),
+  //     fs.rm(path.join(rootDirectory, ".github", "workflows", "lint-repo.yml")),
+  //     fs.rm(path.join(rootDirectory, ".github", "workflows", "no-response.yml")),
+  //     fs.rm(path.join(rootDirectory, ".github", "dependabot.yml")),
+  //     fs.rm(path.join(rootDirectory, ".github", "PULL_REQUEST_TEMPLATE.md")),
+  //     fs.rm(path.join(rootDirectory, "LICENSE.md")),
+  //   ]);
+  //
+  //   execSync(pm.run("format", "--log-level warn"), {
+  //     cwd: rootDirectory,
+  //     stdio: "inherit",
+  //   });
+  //
+  //   console.log(
+  //     `
+  // Setup is almost complete. Follow these steps to finish initialization:
+  //
+  // - Start the database:
+  //   ${pm.run("docker", "")}
+  //
+  // - Run setup (this updates the database):
+  //   ${pm.run("setup", "")}
+  //
+  // - Run the first build (this generates the server you will run):
+  //   ${pm.run("build", "")}
+  //
+  // - You're now ready to rock and roll 🤘
+  //   ${pm.run("dev", "")}
+  //     `.trim(),
+  //   );
+}
 
 // module.exports = main;
 main().catch(console.error);

@@ -32,7 +32,6 @@
   ],
   "dependencies": {
     "@isaacs/express-prometheus-middleware": "^1.2.1",
-    "@npmcli/package-json": "^6.1.1",
     "@prisma/client": "^6.5.0",
     "@react-router/express": "^7.4.1",
     "@react-router/fs-routes": "^7.4.1",
@@ -56,6 +55,8 @@
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.23.0",
     "@faker-js/faker": "^9.6.0",
+    "@iarna/toml": "^2.2.5",
+    "@npmcli/package-json": "^6.1.1",
     "@react-router/dev": "^7.4.1",
     "@tailwindcss/vite": "^4.0.17",
     "@testing-library/cypress": "^10.0.3",
