@@ -158,6 +158,10 @@ async function main(): Promise<void> {
     "remix.init",
     "Dockerfile." + pm.name,
   );
+  const DOCKERFILE_INIT_PATH = path.join(
+    rootDirectory,
+    "Dockerfile." + pm.name,
+  );
   const CYPRESS_SUPPORT_PATH = path.join(rootDirectory, "cypress", "support");
   const CYPRESS_COMMANDS_PATH = path.join(CYPRESS_SUPPORT_PATH, "commands.ts");
   const CREATE_USER_COMMAND_PATH = path.join(
@@ -191,7 +195,7 @@ async function main(): Promise<void> {
     fs.readFile(FLY_TOML_PATH, "utf-8"),
     fs.readFile(README_PATH, "utf-8"),
     fs.readFile(EXAMPLE_ENV_PATH, "utf-8"),
-    fs.readFile(DOCKERFILE_PATH, "utf-8"),
+    fs.readFile(DOCKERFILE_INIT_PATH, "utf-8"),
     fs.readFile(CYPRESS_COMMANDS_PATH, "utf-8"),
     fs.readFile(CREATE_USER_COMMAND_PATH, "utf-8"),
     fs.readFile(DELETE_USER_COMMAND_PATH, "utf-8"),
