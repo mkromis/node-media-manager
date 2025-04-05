@@ -1,10 +1,8 @@
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { fixupConfigRules, fixupPluginRules } from "@eslint/compat";
-
-import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
-
 import js from "@eslint/js";
 import tsParser from "@typescript-eslint/parser";
 import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
@@ -35,7 +33,7 @@ const compat = new FlatCompat({
 
 export default tseslint.config(
   js.configs.recommended,
-  js.configs.all,
+  // js.configs.all,
   tseslint.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
