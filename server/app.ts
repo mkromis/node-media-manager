@@ -9,7 +9,7 @@ export const app = express();
 // non-GET/HEAD/OPTIONS requests hit the primary region rather than read-only
 // Postgres DBs.
 // learn more: https://fly.io/docs/getting-started/multi-region-databases/#replay-the-request
-app.all("*", function getReplayResponse(req, res, next) {
+app.all(/(.*)/,function getReplayResponse(req, res, next) {
   const { method, path: pathname } = req;
   const { PRIMARY_REGION, FLY_REGION } = process.env;
 
@@ -51,7 +51,7 @@ app.use((req, res, next) => {
 app.use(
   createRequestHandler({
     // @ts-expect-error - virtual module provided by React Router at build time
-    // eslint-disable-next-line import/no-unresolved
+     
     build: () => import("virtual:react-router/server-build"),
     getLoadContext() {
       return {
