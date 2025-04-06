@@ -1,9 +1,9 @@
 import "react-router";
 import { createRequestHandler } from "@react-router/express";
-import express from "express";
+import express, { Express } from "express";
 
 // Main app
-export const app = express();
+export const app:Express = express();
 
 // if we're not in the primary region, then we need to make sure all
 // non-GET/HEAD/OPTIONS requests hit the primary region rather than read-only
@@ -40,8 +40,8 @@ app.use((req, res, next) => {
   // /clean-urls/ -> /clean-urls
   if (req.path.endsWith("/") && req.path.length > 1) {
     const query = req.url.slice(req.path.length);
-    const safepath = req.path.slice(0, -1).replace(/\/+/g, "/");
-    res.redirect(301, safepath + query);
+    const safePath = req.path.slice(0, -1).replace(/\/+/g, "/");
+    res.redirect(301, safePath + query);
     return;
   }
   next();
@@ -50,8 +50,6 @@ app.use((req, res, next) => {
 // Catch all routes handler
 app.use(
   createRequestHandler({
-    // @ts-expect-error - virtual module provided by React Router at build time
-     
     build: () => import("virtual:react-router/server-build"),
     getLoadContext() {
       return {
