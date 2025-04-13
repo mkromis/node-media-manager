@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
+/* full list of colors: https://catppuccin.com/docs/palette */
+/* sample css from: https://github.com/thomasweitzel/frontend-mentor/blob/main/color-theme-toggle/src/App.css */
+
 @theme {
+  /* latte theme */
   --color-*: initial;
 
   --color-rosewater: #dc8a78;
