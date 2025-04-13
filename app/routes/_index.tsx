@@ -4,7 +4,7 @@ import { useOptionalUser } from "../utils";
 
 import { Route } from "./+types/_index";
 
-export function meta({}: Route.MetaFunction) {
+export function meta({ }: Route.MetaFunction) {
   return [{ title: "React Router Notes" }];
 }
 
@@ -20,11 +20,11 @@ export default function Index({ loaderData }: Route.ComponentProps) {
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
             <div className="absolute inset-0">
-              <img
+              {/* <img
                 className="h-full w-full object-cover"
                 src="https://user-images.githubusercontent.com/1500684/158276320-c46b661b-8eff-4a4d-82c6-cf296c987a12.jpg"
                 alt="BB King playing blues on his Gibson 'Lucille' guitar"
-              />
+              /> */}
               <div className="absolute inset-0 bg-[color:rgba(27,167,254,0.5)] mix-blend-multiply" />
             </div>
             <div className="relative px-4 pt-16 pb-8 sm:px-6 sm:pt-24 sm:pb-14 lg:px-8 lg:pt-32 lg:pb-20">
@@ -62,6 +62,20 @@ export default function Index({ loaderData }: Route.ComponentProps) {
                     >
                       Log In
                     </Link>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center rounded-md bg-blue-500 px-4 py-3 font-medium text-white hover:bg-blue-600"
+                      onClick={() => {
+                        const html = document.querySelector("html");
+                        if (html) {
+                          const isDarkMode = html.classList.toggle("dark") === true;
+                          localStorage.theme = isDarkMode ? "dark" : "light";
+                          console.log(`Dark mode is now ${isDarkMode ? "enabled" : "disabled"}.`)
+                        }
+                      }}
+                    >
+                      Dark Mode
+                    </button>
                   </div>
                 )}
               </div>
